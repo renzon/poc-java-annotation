@@ -1,7 +1,14 @@
 package server;
 
-public interface Server {
-	public void execute(String path, String... params);
+import java.lang.annotation.Annotation;
 
-	public void scanRoutes(Class<?> cls);
+import server.security.Security;
+
+public interface Server {
+	void execute(String path, String... params);
+
+	void scan(Class<?> cls);
+	
+	void addSecurity(Annotation ann, Security sec );
+
 }

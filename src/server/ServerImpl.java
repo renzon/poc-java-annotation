@@ -1,5 +1,6 @@
 package server;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -7,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import server.security.Security;
 
 public class ServerImpl implements Server {
 	private Map<String, Executor> routes = new HashMap<>();
@@ -22,16 +25,33 @@ public class ServerImpl implements Server {
 	}
 
 	@Override
-	public void scanRoutes(Class<?> cls) {
+	public void scan(Class<?> cls) {
 		for (Method m : cls.getMethods()) {
-			try {
-				String path = m.getAnnotation(Route.class).path();
-				Object target = cls.newInstance();
-				routes.put(path, new Executor(target, m));
-			} catch (Exception e) {
+			scanRoute(cls, m);
+		}
 
+	}
+
+	private void scanRoute(Class<?> cls, Method m) {
+		Route routeAnnotation = m.getAnnotation(Route.class);
+
+		if (routeAnnotation != null) {
+			String[] paths = routeAnnotation.value();
+			try {
+
+				Object target = cls.newInstance();
+				Executor executor = new Executor(target, m);
+				for (String path : paths) {
+					routes.put(path, executor);
+				}
+
+			} catch (Exception e) {
 			}
 		}
+	}
+
+	@Override
+	public void addSecurity(Annotation ann, Security sec) {
 
 	}
 
