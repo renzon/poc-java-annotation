@@ -1,4 +1,4 @@
-package server.examples;
+package server.examples.route;
 
 import server.Server;
 import server.ServerImpl;
