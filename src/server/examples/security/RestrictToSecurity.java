@@ -17,7 +17,6 @@ public class RestrictToSecurity implements Securitizable {
 			throw new SecurityException("No defined user");
 		}
 		String user = params[0];
-
 		if (!allowedUsers.contains(user)) {
 			throw new SecurityException("User " + user + " cant access this path");
 		}
@@ -26,7 +25,5 @@ public class RestrictToSecurity implements Securitizable {
 	@Override
 	public void extracParams(Annotation a) {
 		allowedUsers.addAll(Arrays.asList(((RestrictTo) a).value()));
-
 	}
-
 }

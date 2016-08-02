@@ -13,9 +13,4 @@ public class RouteExample {
 		System.out.println("Acessing user of Example");
 		System.out.println("Username: " + username);
 	}
-
-	public void notRouteRelated() {
-
-	}
-
 }

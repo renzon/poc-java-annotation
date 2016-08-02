@@ -7,4 +7,8 @@ public class Counter {
 			System.out.println(i);
 		}
 	}
+	
+	public static void main(String[] args) {
+		new Counter().count();
+	}
 }

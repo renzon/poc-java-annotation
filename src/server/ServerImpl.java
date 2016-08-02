@@ -64,7 +64,6 @@ public class ServerImpl implements Server {
 				executor.add(security);
 			}
 		}
-
 	}
 
 	@Override
@@ -97,9 +96,8 @@ class Executor {
 			for (Securitizable s : securities) {
 				s.check(path, params);
 			}
-
+			// Executed only if each security doesn't throw Security Exception
 			method.invoke(target, list.toArray());
-
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -107,7 +105,5 @@ class Executor {
 			e.printStackTrace();
 			throw new RuntimeException("Errors in params");
 		}
-
 	}
-
 }
