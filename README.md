@@ -1,12 +1,18 @@
 # poc-java-annotation
-Project to Analyse Java Annotation and compare it with Python Decorator
+Project to Analyse Java Annotation versus Python Decorator.
+Check Python counterpart in 
+[poc-python-decorator](https://github.com/renzon/poc-python-decorator#poc-python-decorator).
+Each following session has also links to its counterpart.
+
 
 ## Case 1: Annotation which does nothing
+
+[Python Case 1: Decorator which does nothing](https://github.com/renzon/poc-python-decorator#case-1-decorator-which-does-nothing)
 
 In fact it is in Annotation definition not doing anything. 
 Its purpose is supplying code with metadata.
 
-Let's suppose the need for marking methods and only listing their names. 
+Let's suppose the need for marking methods and only listing their names without exection. 
 
 ### Creating Annotation Mark
 
@@ -16,9 +22,9 @@ Let's suppose the need for marking methods and only listing their names.
 public @interface Mark {}
 ```
 
-It's interesting note that a Annotation `Mark` uses another Annotations to define 
-if it is going to be available at runtime (`Retention`) and that its targets are methods (`Target`).
-More than been verbose the code is kind of a paradox because `Retention` annotates itself:
+It's important noticing that an Annotation `Mark` uses another Annotations to define itself. 
+It must define if gonna be available at runtime (`Retention`) and that its targets are methods (`Target`).
+More than been verbose, the code is kind of a paradox because `Retention` annotates itself:
 
 ```java
 @Documented
@@ -27,7 +33,7 @@ More than been verbose the code is kind of a paradox because `Retention` annotat
 public @interface Retention { // omiting code here }
 ```
 
-More than that Annotation introduce a new citizen on Java language, with new sintax e behavior.
+More than that Annotation introduce a new citizen on Java language, with new syntax and behavior.
 For example it doesn't allow Inheritance like a regular Class. 
 
 ### Annotating Methods
@@ -72,7 +78,7 @@ Not Marked
 
 ### Listing Annotated Methods
 
-Listing the Annotated methods is possible by reading metatada through Java Reflection API.
+Listing the Annotated methods is possible by reading metadada through Java Reflection API.
 In this example nothing will be executed. 
 Annotated methods will only have their names printed:
 
@@ -98,12 +104,16 @@ marked1
 marked2
 ```
 
-So the conclusion on this section is that Annotation and Processing are two completely differently things.
+So the conclusion on this section is that Annotation and processing are two completely differently things.
+
+[Python Case 1: Decorator which does nothing](https://github.com/renzon/poc-python-decorator#case-1-decorator-which-does-nothing)
 
 ## Case 2: Annotation which does something
 
+[Case 2: Decorator which does something](https://github.com/renzon/poc-python-decorator#case-2-decorator-which-does-something)
+
 A micro framework to measure methods running time can be accomplished using previous approach.
-The difference int this case is the annotated methods execution.
+The difference in this case is the annotated methods execution.
 
 So first the marking Annotation can be created:
 
@@ -164,7 +174,7 @@ public class TimingRunner {
 ```
 
 Now before executing `count` initial time is kept in `begin` variable. 
-After its execution elapsed time is calculate and printed:
+After that its execution elapsed time is calculate and printed:
  
 ```
 ...
@@ -174,6 +184,8 @@ After its execution elapsed time is calculate and printed:
 Method count Executed in 14ms
 ```
 
+[Case 2: Decorator which does something](https://github.com/renzon/poc-python-decorator#case-2-decorator-which-does-something)
+
 # Annotation Framework
 
 Several frameworks use Annotations as base for extension points.
@@ -182,10 +194,12 @@ Thus a simple version of server routing and security is going to be developed on
 
 ## Receiving parameters
 
+[Python - Receiving parameters](https://github.com/renzon/poc-python-decorator#receiving-parameters)
+
 Routing configuration is a common problem that every web framework must deal with.
 Some of them use Annotation to configure paths to which a method should respond.
-So the first step, again, is creating a Annotation.
-But this time it needs defining tha paths:
+So the first step, again, is creating an Annotation.
+But this time it needs defining the paths:
 
 ```java
 @Retention(RetentionPolicy.RUNTIME)
@@ -195,9 +209,9 @@ public @interface Route {
 }
 ```
 
-It's imporant noticing the definition of `value`.
-The sintax is different from a class attribute.
-It seems line a method execution (`value()`), but it isn't.
+It's important noticing the definition of `value`.
+The syntax is different from a class attribute.
+It seems a method execution (`value()`), but it isn't.
 Now it can be used to annotate methods:
 
 ```java
@@ -215,11 +229,11 @@ public class RouteExample {
 }
 ```
 
-The difference now it that `Route` receives a parameter which is hold by `value`
+The difference now is that `Route` receives a parameter which is hold by `value`
 Four facts worth mentioning:
 
 1. Besides values been a String array (`String[]`) on `root` a simple string `"/"`is given as parameter.
- In one hand it makes code simples once it isn't necessary wrapping unitary parameter as array: `{"/"}`.
+ In one hand it makes code simpler once it isn't necessary wrapping unitary parameter as array, e.g. `{"/"}`.
  But on the other hand it violates the supposed strong Java typing.
 2. An annotation attribute can have any name.
  But if one different from `value` is chosen its name can't be omitted when passing parameter. 
@@ -231,7 +245,7 @@ Four facts worth mentioning:
 		System.out.println("Acessing root of Example");
   }
  ```
-3. Using a var args would be more consistent for values, but Java currently doesn't accept it on Annotations.
+3. Using a var args would be more consistent in this case, but Java currently doesn't accept it on Annotations.
 4. Only primitives, String, Class, Enum, Annotation or array of these types can be used as attributes.
  Thus no customized user objects allowed.
 
@@ -295,11 +309,15 @@ Username: Admin
 Receiving Request on path: /notexisting
 404: Page not Found
 ```
+
+[Python - Receiving parameters](https://github.com/renzon/poc-python-decorator#receiving-parameters)
 	
 ## Security
 
+[Python Security](https://github.com/renzon/poc-python-decorator#security)
+
 Security issue differs from previous because it modifies execution flow.
-The mains idea is provide an extension point so framework users can plug their own Annotations and security handlers.
+Mains idea is provide an extension point so framework users can plug their own Annotations and security handlers.
 So an Interface is created to handle security:
 
 ```java
@@ -309,12 +327,13 @@ public interface Securitizable {
 }
 ```
 
-Method `extractParams` is responsible for extraction possible configurations parameters from an Annotation.
+Method `extractParams` is responsible for extracting possible configurations parameters from an Annotation.
 
-Methos check is responsible for check execution. 
+Method `check` is responsible for check execution. 
 If it raises `SecurityException` the execution is interrupted.
  
-Finalizing `Server`interface provide a configuration method `addSecurity` to connect Annotation with respetive Securitizable.
+Finalizing `Server` interface provide a configuration method `addSecurity` to connect Annotation with respective 
+`Securitizable`.
 Interface is repeated here for convenience:
 
 ```java
@@ -454,14 +473,15 @@ Receiving Request on path: /notexisting
 404: Page not Found
 ```
 
-Thus the mocro framework is completing showing the use of Annotations to add extension points.
+Thus the micro framework is completing showing the use of Annotations to add extension points.
 Methods are been routed and security is properly configured using this kind of metadata.
+
+[Python Security](https://github.com/renzon/poc-python-decorator#security)
 
 # Conclusion
 
 To finalize, the table bellow is created to compare Python Decorator versus Java Annotation:
 
-To finalize, the table bellow is created to compare Python Decorator versus Java Annotation:
 
       Feature              |      Python Decorator            |    Java Annotation
 ---------------------------|----------------------------------|-----------------------------------------------
@@ -469,11 +489,12 @@ Alters method/function     | Yes                              | No, need post pr
 Uses existing language     | Yes, function                    | No, Annotation was created
 Uses only Object Orient.   | No, functional programming       | Yes
 Unrestricted target        | Yes                              | No, need to define method, class, attribute
-Automatic Maaping          | Yes, but module must be imported | No, class scan needed 
+Automatic Mapping          | Yes, but module must be imported | No, class scan needed 
 Unrestricted params        | Yes                              | No, can't define var args and general classes
+Unrestricted param types   | Yes                              | No, only primitives, Class, Enum or array of these types
 Param keep code simple     | No, extra level of function      | Yes, only add attribute call
 Exec. independent of order | No                               | Yes
-Keep target integrety      | No, need fix with wraps          | Yes
+Keep target integrity      | No, need fix with wraps          | Yes
 # of methods/functions \*  | 3                                | 10
 Lines of Code \*\*         | 40                               | 187
 
@@ -481,6 +502,6 @@ Lines of Code \*\*         | 40                               | 187
 
 \*\* Counted only for framework. Interfaces included
 
-The above the table is construct so "Yes" answer is positive and "No' negative.
+The above the table is construct so "Yes" means positive and "No' negative.
 So my personal conclusion is that Python Decorator is simpler than Java Annotation.
 Besides that, different opinions are very welcome ;)
